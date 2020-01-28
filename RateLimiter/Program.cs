@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using RateLimiter;
 
 namespace RateLimiter
 {
@@ -6,7 +8,19 @@ namespace RateLimiter
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var rateLimiter = new OperationRateLimiter(10, 1000);
+
+            var stopwatch = Stopwatch.StartNew();
+
+            for(var i=0; i<30; i++)
+            {
+                rateLimiter.WaitForPermission();
+                Console.WriteLine($"{i}");
+            }
+            
+            stopwatch.Stop();
+
+            Console.WriteLine($"{stopwatch.Elapsed.TotalSeconds:##.00} s");
         }
     }
 }

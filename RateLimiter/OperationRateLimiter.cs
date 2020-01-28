@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OperationRateLimiter
+namespace RateLimiter
 {
     public class OperationRateLimiter
     {
@@ -14,7 +14,7 @@ namespace OperationRateLimiter
 
         private SemaphoreSlim _controlSemaphore;
         private Timer _controlTimer;
-        private object _semaphoreLock;
+        private readonly object _semaphoreLock;
 
         public OperationRateLimiter(int numOfOperations, int period_ms)
         {
@@ -33,7 +33,7 @@ namespace OperationRateLimiter
                 { 
                     lock(_semaphoreLock)
                     {
-                        var releaseCount = _controlSemaphore.CurrentCount - NumOfOperations;
+                        var releaseCount = NumOfOperations - _controlSemaphore.CurrentCount;
                         if(releaseCount > 0)
                         {
                             _controlSemaphore.Release(releaseCount);
@@ -59,7 +59,15 @@ namespace OperationRateLimiter
         public void WaitForPermission()
         {
             Start();
-            _controlSemaphore.Wait();
+
+            Task task;
+
+            lock(_semaphoreLock)
+            {
+                task = _controlSemaphore.WaitAsync();
+            }
+
+            Task.WaitAll(task);
         }
 
     }
