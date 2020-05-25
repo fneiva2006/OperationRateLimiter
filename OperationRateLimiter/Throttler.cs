@@ -33,6 +33,7 @@ namespace OperationRateLimiter
         public void Stop()
         {
             _timer.Dispose();
+            ReleaseSemaphores();
             IsRunning = false;
         }
 
