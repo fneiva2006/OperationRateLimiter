@@ -7,8 +7,8 @@
     <StartupObject />
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OperationRateLimiter.L\OperationRateLimiter.csproj" />
+  <ItemGroup>    
+    <ProjectReference Include="..\OperationRateLimiter\OperationRateLimiter.csproj" />
   </ItemGroup>
 
 </Project>
