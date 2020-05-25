@@ -1,4 +1,4 @@
-[![Nuget](https://img.shields.io/nuget/v/OperationRateLimiter?color=orange)](https://www.nuget.org/packages/OperationRateLimiter/1.0.0)
+[![Nuget](https://img.shields.io/nuget/v/OperationRateLimiter?color=orange)](https://www.nuget.org/packages/OperationRateLimiter/1.0.1)
 # OperationRateLimiter
 
 Use the `Throttler` object to pause the program if a certain number of operations per time period has reached its limit. When the execution of the program is blocked, it will be released only in the next time period window, or if the `stop()`method gets called.
