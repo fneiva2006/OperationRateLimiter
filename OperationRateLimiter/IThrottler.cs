@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace OperationRateLimiter
 {
@@ -10,7 +11,7 @@ namespace OperationRateLimiter
 
         void Start();
         void Stop();
-        void WaitForPermission();
-        Task WaitForPermissionAsync();
+        void WaitForPermission(CancellationToken? cancellationToken = null);
+        Task WaitForPermissionAsync(CancellationToken? cancellationToken = null);
     }
 }

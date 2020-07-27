@@ -37,27 +37,29 @@ namespace OperationRateLimiter
             IsRunning = false;
         }
 
-        public void WaitForPermission()
+        public void WaitForPermission(CancellationToken? cancellationToken = null)
         {
             Start();
 
             Task task;
             lock (_lock)
             {
-                task = _controlSemaphore.WaitAsync();
+                task = cancellationToken.HasValue ? _controlSemaphore.WaitAsync(cancellationToken.Value)
+                    : _controlSemaphore.WaitAsync();                
             }
 
             Task.WaitAll(task);
         }
 
-        public async Task WaitForPermissionAsync()
+        public async Task WaitForPermissionAsync(CancellationToken? cancellationToken = null)
         {
             Start();
 
             Task task;
             lock (_lock)
             {
-                task = _controlSemaphore.WaitAsync();
+                task = cancellationToken.HasValue ? _controlSemaphore.WaitAsync(cancellationToken.Value)
+                    : _controlSemaphore.WaitAsync();
             }
 
             await task;
