@@ -7,21 +7,27 @@ namespace RateLimiter
 {
     public class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {           
-            var numberOfRequestsLimit = 20;
-            var periodMiliseconds = 5000;
+            var numberOfRequestsLimit = 700;
+            var periodMiliseconds = 60000;
 
             // Instantiates the throttler (starts working automatically)
             var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds);
 
             var t1 = Task1(throttler);
             var t2 = Task2(throttler);
+          
+            var stopwatch = Stopwatch.StartNew();
 
             Task.WaitAll(t1, t2);
 
+            stopwatch.Stop();
+
             // Stops the throttler from working
-            throttler.Stop();            
+            throttler.Stop();
+
+            Console.WriteLine($"Total elapsed time {stopwatch.Elapsed.TotalSeconds:##.00} s");
         }
 
         public static async Task Task1(IThrottler throttler)
@@ -29,7 +35,7 @@ namespace RateLimiter
             Console.WriteLine("Sync throttler...  ");
             var stopwatch = Stopwatch.StartNew();
 
-            for (var i = 0; i < 30; i++)
+            for (var i = 0; i < 50; i++)
             {
                 // Use sync mode. Will pause when requests made in the last period have reached the limit configured
                 throttler.WaitForPermission();
@@ -45,7 +51,7 @@ namespace RateLimiter
             Console.WriteLine("Async throttler...");
             var stopwatch = Stopwatch.StartNew();
 
-            for (var i = 0; i < 30; i++)
+            for (var i = 0; i < 350; i++)
             {
                 // USe async mode
                 await throttler.WaitForPermissionAsync();

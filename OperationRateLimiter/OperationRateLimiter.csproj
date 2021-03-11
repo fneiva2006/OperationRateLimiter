@@ -7,19 +7,12 @@
     <Version>1.0.3</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Felipe Neiva Montalvão Melo</Authors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/fneiva2006/OperationRateLimiter/</RepositoryUrl>
     <Description>Pauses the program execution when an specified rate limit has been exceeded.</Description>
     <PackageTags>c# dotnet .NET rate limit throttling</PackageTags>
     <PackageIcon>pngtree-vector-speedometer-icon-png-image_515788.jpg</PackageIcon>
     <PackageIconUrl />
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\..\..\..\Users\felipene\Downloads\pngtree-vector-speedometer-icon-png-image_515788.jpg">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
 
 </Project>

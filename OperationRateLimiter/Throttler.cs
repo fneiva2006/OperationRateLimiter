@@ -1,38 +1,60 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OperationRateLimiter
 {
     public class Throttler : IThrottler
     {
-        public int Period { get; private set; }
-        public int NumOfRequests { get; private set; }
         public bool IsRunning { get; private set; }
+        public int IntervalBetweenOperations { get; private set; }
+        public int NumOfRequests { get; private set; }
+        public int Period { get; private set; }
+        public bool HasUniformOperationRatio { get; }
+        public bool ShouldThrowTaskCancelledException { get; }
 
-        private readonly SemaphoreSlim _controlSemaphore;
-        private Timer _timer;
+        internal readonly SemaphoreSlim _masterSemaphore;
+        internal readonly SemaphoreSlim _intervalControlSemaphore = new SemaphoreSlim(1, 1);
+        
+        internal Timer _masterTimer;
+
         private readonly object _lock = new object();
 
-        public Throttler(int numOfRequests, int period_ms)
+        public Throttler(int numOfRequests, int period_ms, bool hasUniformOperationRatio = true, bool shouldThrowTaskCancelledException = false)
         {
-            Period = period_ms;
+            IntervalBetweenOperations = period_ms / numOfRequests;
             NumOfRequests = numOfRequests;
+            Period = period_ms;
+            HasUniformOperationRatio = hasUniformOperationRatio;
+            ShouldThrowTaskCancelledException = shouldThrowTaskCancelledException;
 
-            _controlSemaphore = new SemaphoreSlim(NumOfRequests, NumOfRequests);
+            if (HasUniformOperationRatio)
+            {
+                new Timer(IntervalTimerReleaseSemaphoreCallback, 
+                    null, IntervalBetweenOperations, IntervalBetweenOperations);
+            }
+
+            _masterSemaphore = new SemaphoreSlim(NumOfRequests, NumOfRequests);
         }
+
+        #region Public methods
 
         public void Start()
         {
             if (!IsRunning)
             {
-                _timer = new Timer(_ => ReleaseSemaphores(), null, Period, Period);
+                _masterTimer = new Timer(_ => ReleaseSemaphores(), null, Period, Period);
                 IsRunning = true;
             }
         }
 
         public void Stop()
         {
-            _timer.Dispose();
+            if (_masterTimer != null)
+            {
+                _masterTimer.Dispose();
+            }
+            
             ReleaseSemaphores();
             IsRunning = false;
         }
@@ -41,42 +63,80 @@ namespace OperationRateLimiter
         {
             Start();
 
-            Task task;
-            lock (_lock)
+            try
             {
-                task = cancellationToken.HasValue ? _controlSemaphore.WaitAsync(cancellationToken.Value)
-                    : _controlSemaphore.WaitAsync();                
+                WaitForIntervalControlSemaphore(cancellationToken).Wait();
+                LockAndExecute(cancellationToken).Wait();
             }
-
-            Task.WaitAll(task);
+            catch (AggregateException aggregateException)
+            {
+                if (ShouldThrowTaskCancelledException && 
+                    aggregateException.InnerException is TaskCanceledException)
+                {
+                    throw aggregateException.InnerException;
+                }
+            }           
         }
 
         public async Task WaitForPermissionAsync(CancellationToken? cancellationToken = null)
         {
             Start();
 
-            Task task;
-            lock (_lock)
+            try
             {
-                task = cancellationToken.HasValue ? _controlSemaphore.WaitAsync(cancellationToken.Value)
-                    : _controlSemaphore.WaitAsync();
+                await WaitForIntervalControlSemaphore(cancellationToken);
+                await LockAndExecute(cancellationToken);
             }
-
-            await task;
+            catch (TaskCanceledException)
+            {
+                if (ShouldThrowTaskCancelledException)
+                {
+                    throw;
+                }
+            }            
         }
 
-        private void ReleaseSemaphores()
+        #endregion
+
+        #region Auxiliary methods
+
+        internal Task WaitForIntervalControlSemaphore(CancellationToken? cancellationToken)
+        {
+            return cancellationToken.HasValue ? _intervalControlSemaphore.WaitAsync(cancellationToken.Value) :
+                _intervalControlSemaphore.WaitAsync();
+        }
+
+        internal void IntervalTimerReleaseSemaphoreCallback(object state)
+        {
+            if (_intervalControlSemaphore.CurrentCount.Equals(0))
+            {
+                _intervalControlSemaphore.Release();
+            }
+        }
+
+        internal Task LockAndExecute(CancellationToken? cancellationToken = null)
         {
             lock (_lock)
             {
-                var releaseCount = NumOfRequests - _controlSemaphore.CurrentCount;
+                return cancellationToken.HasValue ? _masterSemaphore.WaitAsync(cancellationToken.Value)
+                    : _masterSemaphore.WaitAsync();
+            }
+        }
+
+        internal void ReleaseSemaphores()
+        {
+            lock (_lock)
+            {
+                var releaseCount = NumOfRequests - _masterSemaphore.CurrentCount;
 
                 if (releaseCount > 0)
                 {
-                    _controlSemaphore.Release(releaseCount);
+                    _masterSemaphore.Release(releaseCount);
                 }
             }
         }
+
+        #endregion
 
     }
 }

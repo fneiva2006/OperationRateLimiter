@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationRateLimiter", "Ope
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationRateLimiter.Example", "OperationRateLimiter.Example\OperationRateLimiter.Example.csproj", "{BA249F4E-C960-4ECE-846F-F57C707ABBC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationRateLimiter.Tests", "OperationRateLimiter.Tests\OperationRateLimiter.Tests.csproj", "{11C469C0-1438-4499-9C95-BFEFC6CD2E54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BA249F4E-C960-4ECE-846F-F57C707ABBC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA249F4E-C960-4ECE-846F-F57C707ABBC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA249F4E-C960-4ECE-846F-F57C707ABBC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11C469C0-1438-4499-9C95-BFEFC6CD2E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11C469C0-1438-4499-9C95-BFEFC6CD2E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11C469C0-1438-4499-9C95-BFEFC6CD2E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11C469C0-1438-4499-9C95-BFEFC6CD2E54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

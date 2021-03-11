@@ -8,6 +8,7 @@ namespace OperationRateLimiter
         bool IsRunning { get; }
         int NumOfRequests { get; }
         int Period { get; }
+        bool HasUniformOperationRatio { get; }
 
         void Start();
         void Stop();
