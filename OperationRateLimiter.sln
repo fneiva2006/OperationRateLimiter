@@ -7,7 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationRateLimiter", "Ope
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationRateLimiter.Example", "OperationRateLimiter.Example\OperationRateLimiter.Example.csproj", "{BA249F4E-C960-4ECE-846F-F57C707ABBC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationRateLimiter.Tests", "OperationRateLimiter.Tests\OperationRateLimiter.Tests.csproj", "{11C469C0-1438-4499-9C95-BFEFC6CD2E54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationRateLimiter.Tests", "OperationRateLimiter.Tests\OperationRateLimiter.Tests.csproj", "{11C469C0-1438-4499-9C95-BFEFC6CD2E54}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FD0B7ABD-92B1-4089-8D2A-614F95316174}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

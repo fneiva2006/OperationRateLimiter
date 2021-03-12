@@ -7,13 +7,13 @@ namespace RateLimiter
 {
     public class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] _)
         {           
             var numberOfRequestsLimit = 700;
             var periodMiliseconds = 60000;
 
             // Instantiates the throttler (starts working automatically)
-            var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds);
+            var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, true);
 
             var t1 = Task1(throttler);
             var t2 = Task2(throttler);

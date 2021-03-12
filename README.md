@@ -1,3 +1,4 @@
+
 [![Nuget](https://img.shields.io/nuget/v/OperationRateLimiter?color=orange)](https://www.nuget.org/packages/OperationRateLimiter/1.0.1)
 # OperationRateLimiter
 
@@ -62,3 +63,30 @@ public class Program
     }
 }
 ```
+### Choose rate control type
+
+The throttler may work in two different ways when controlling how many operations are made within a time frame:
+
+1. By **immediately** unblocking all `WaitForPermission` calls up to the time frame limit and then blocking subsequent calls until the next frame. It will behave like bursts of operations at the beginning of every time frame. 
+**E.g:** If 10 operations can be made in 50 seconds, and there is 100 operations to be made, the whole batch will take 450 seconds to complete;
+
+2. By **uniformly** distributing all `WaitForPermission` unblock moments within the time frame. 
+**E.g.:** If 10 operations can be made in 50 seconds, and there is 100 operations to be made, the `WaitForPermission` will unblock every 5 seconds and thus the whole batch of operations will take 500 seconds to complete;
+
+Set the type of control in the constructor. `true` for type **1** and `false` for type **2** (default is `true`): 
+```C#
+var hasUniformOperationRatio = false;
+var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, hasUniformOperationRatio);
+```
+
+### Choose cancellation behavior
+When cancelling a `WaitForPermission` call, a `TaskCanceledException` can be thrown or not depending on how user makes the `Throttler` configuration.
+In order to throw the exception, set to true the constructor parameter `shouldThrowTaskCancelledException`. Default is set to `false`.
+
+```C#
+var hasUniformOperationRatio = false;
+var shouldThrowCanceledTaskException = true;
+
+var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, hasUniformOperationRatio, shouldThrowCanceledTaskException );
+```
+

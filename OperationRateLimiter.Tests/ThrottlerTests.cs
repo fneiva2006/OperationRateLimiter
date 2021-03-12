@@ -143,7 +143,7 @@ namespace OperationRateLimiter.Tests
             Should.CompleteIn(() => _throttler.WaitForPermission(cancellationToken),
                 TimeSpan.FromMilliseconds(TOLERABLE_TIME_AFTER_CANCELLING_MS));
         }
-
+        
         [Fact]
         public void WaitForPermission_ShouldThrowTaskCancelledException_IfOperationIsCancelled()
         {
