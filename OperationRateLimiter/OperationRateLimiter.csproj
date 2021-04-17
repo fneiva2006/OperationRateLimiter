@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Felipe Neiva Montalvão Melo</Authors>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/fneiva2006/OperationRateLimiter/</RepositoryUrl>
     <Description>Pauses the program execution when an specified rate limit has been exceeded.</Description>
     <PackageTags>c# dotnet .NET rate limit throttling</PackageTags>

@@ -9,18 +9,18 @@ namespace RateLimiter
     {
         static void Main(string[] _)
         {           
-            var numberOfRequestsLimit = 70;
-            var periodMiliseconds = 10000;
+            var numberOfRequestsLimit = 7;
+            var periodMiliseconds = 1000;
 
             // Instantiates the throttler (starts working automatically)
-            var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, false);
+            var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, true);
 
-            var t1 = Task1(throttler);
+            //var t1 = Task1(throttler);
             var t2 = Task2(throttler);
           
             var stopwatch = Stopwatch.StartNew();
 
-            Task.WaitAll(t1, t2);
+            Task.WaitAll(t2);
 
             stopwatch.Stop();
 
