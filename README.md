@@ -87,6 +87,7 @@ In order to throw the exception, set to true the constructor parameter `shouldTh
 var hasUniformOperationRatio = false;
 var shouldThrowCanceledTaskException = true;
 
-var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, hasUniformOperationRatio, shouldThrowCanceledTaskException );
+var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, 
+    hasUniformOperationRatio, shouldThrowCanceledTaskException );
 ```
 

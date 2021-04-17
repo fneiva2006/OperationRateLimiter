@@ -9,11 +9,11 @@ namespace RateLimiter
     {
         static void Main(string[] _)
         {           
-            var numberOfRequestsLimit = 700;
-            var periodMiliseconds = 60000;
+            var numberOfRequestsLimit = 70;
+            var periodMiliseconds = 10000;
 
             // Instantiates the throttler (starts working automatically)
-            var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, true);
+            var throttler = new Throttler(numberOfRequestsLimit, periodMiliseconds, false);
 
             var t1 = Task1(throttler);
             var t2 = Task2(throttler);

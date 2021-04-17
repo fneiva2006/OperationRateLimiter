@@ -65,7 +65,11 @@ namespace OperationRateLimiter
 
             try
             {
-                WaitForIntervalControlSemaphore(cancellationToken).Wait();
+                if (HasUniformOperationRatio)
+                {
+                    WaitForIntervalControlSemaphoreAsync(cancellationToken).Wait();
+                }
+                
                 LockAndExecute(cancellationToken).Wait();
             }
             catch (AggregateException aggregateException)
@@ -84,7 +88,11 @@ namespace OperationRateLimiter
 
             try
             {
-                await WaitForIntervalControlSemaphore(cancellationToken);
+                if (HasUniformOperationRatio)
+                {
+                    await WaitForIntervalControlSemaphoreAsync(cancellationToken);
+                }
+                
                 await LockAndExecute(cancellationToken);
             }
             catch (TaskCanceledException)
@@ -100,10 +108,16 @@ namespace OperationRateLimiter
 
         #region Auxiliary methods
 
-        internal Task WaitForIntervalControlSemaphore(CancellationToken? cancellationToken)
+        internal async Task WaitForIntervalControlSemaphoreAsync(CancellationToken? cancellationToken)
         {
-            return cancellationToken.HasValue ? _intervalControlSemaphore.WaitAsync(cancellationToken.Value) :
-                _intervalControlSemaphore.WaitAsync();
+            if (cancellationToken.HasValue)
+            {
+                await _intervalControlSemaphore.WaitAsync(cancellationToken.Value);
+            }
+            else
+            {
+                await _intervalControlSemaphore.WaitAsync();
+            }                
         }
 
         internal void IntervalTimerReleaseSemaphoreCallback(object state)
